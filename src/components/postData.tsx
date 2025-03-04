@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 export default function PostData() {
   const [data, setData] = useState(null);
@@ -17,20 +19,18 @@ export default function PostData() {
   };
 
   return <div className="p-4 m-4 bg-gray-100 rounded-md w-full">
-    {/* two columns */}
-    <div className="flex flex-row">
+    <div className="flex flex-row gap-4">
       <div>
-        <button onClick={postData} className="bg-blue-500 text-white p-2 rounded">
+        <Button onClick={postData}>
           {loading ? <span>Loading...</span> : <span>Post Data</span>}
-        </button>
+        </Button>
       </div>
       <div>
-        <input
+        <Input
           type="text"
           value={message}
           placeholder="Message"
           onChange={(e) => setMessage(e.target.value)}
-          className="border p-2 rounded ml-4"
         />
       </div>
     </div>

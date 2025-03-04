@@ -1,6 +1,7 @@
+import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
-  return <a href="/login" className="bg-blue-500 text-white p-2 mt-4 rounded">
-    Login
-  </a>
+  const router = useRouter();
+  return <Button onClick={() => router.push('/login')}>Login</Button>
 }

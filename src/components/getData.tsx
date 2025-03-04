@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 
 export default function GetData() {
   const [data, setData] = useState(null);
@@ -13,9 +14,9 @@ export default function GetData() {
   };
 
   return <div className="p-4 m-4 bg-gray-100 rounded-md w-full">
-    <button onClick={getData} className="bg-blue-500 text-white p-2 rounded">
+    <Button onClick={getData}>
       {loading ? <span>Loading...</span> : <span>Get Data</span>}
-    </button>
+    </Button>
     {!loading && data && <pre>{JSON.stringify(data, null, 2)}</pre>}
   </div>;
 }

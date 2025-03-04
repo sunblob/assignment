@@ -1,5 +1,6 @@
 import { signOut } from "next-auth/react";
+import { Button } from '@/components/ui/button';
 
 export default function Logout() {
-  return <button onClick={() => signOut()} className="bg-red-500 text-white p-2 mt-4 rounded">Logout</button>;
+  return <Button onClick={() => signOut()}>Logout</Button>;
 }
