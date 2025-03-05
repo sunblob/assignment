@@ -1,47 +1,46 @@
-import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-
-const testUsers = [
-  { id: "1", name: "Test User", username: "test@test.com", password: "6054c4a8-8c73-4456-91e3-58efc8c01286" },
-];
+import NextAuth from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import { loginSchema } from './types';
+import prisma from './lib/prisma';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-
   providers: [
-
     CredentialsProvider({
-      name: "Credentials",
+      name: 'Credentials',
       credentials: {
-        username: { label: "Username", type: "text" },
-        password: { label: "Password", type: "password" },
+        username: { label: 'Username', type: 'text' },
+        password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        const { username, password } = credentials || {};
+        const { username, password } = await loginSchema.parseAsync(credentials);
+        // TODO: hash password
+        // const hashedPassword = await argon2.hash(password);
 
-        console.log(" !!! ~ authorize ~ credentials:", credentials)
-
-        if (!username || typeof username !== 'string' || !password || typeof password !== 'string') {
-          return null;
-        }
-
-        // Validate against testUsers JSON object
-        const user = testUsers.find(
-          (u) => u.username === username && u.password === password
-        );
+        let user = await prisma.user.findFirst({
+          where: {
+            email: username,
+            password: password,
+          },
+        });
 
         if (user) {
           return user;
         }
 
-        // If no match is found
-        return null;
+        user = await prisma.user.create({
+          data: {
+            email: username,
+            password: password,
+          },
+        });
+
+        return user;
       },
     }),
-
   ],
 
   session: {
-    strategy: "jwt", 
+    strategy: 'jwt',
   },
 
   callbacks: {
@@ -60,7 +59,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         };
       }
       return session;
-    }
-
+    },
   },
 });

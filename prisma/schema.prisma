@@ -14,8 +14,50 @@ datasource db {
 }
 
 model Test {
-  id String @id @default(uuid())
-  name String
+  id        String   @id @default(uuid())
+  name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  favoriteImages FavoriteImage[]
+
+  @@map("users")
+}
+
+model FavoriteImage {
+  id        String   @id @default(uuid())
+  userId    String
+  imageId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User  @relation(fields: [userId], references: [id])
+  image Image @relation(fields: [imageId], references: [id])
+
+  @@map("favorite_images")
+}
+
+model Image {
+  id              String   @id @default(uuid())
+  pexelsId        Int      @unique
+  url             String
+  photographer    String
+  photographerUrl String
+  src             Json
+  width           Int
+  height          Int
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  favoriteImages FavoriteImage[]
+
+  @@map("images")
 }
